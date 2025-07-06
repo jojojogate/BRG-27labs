@@ -3,54 +3,54 @@
 # Simple FTP Server Setup on Ubuntu (vsftpd)
 This setup demonstrates a basic FTP server hosted on a cloud-based Ubuntu instance (e.g., AWS EC2) using the **vsftpd** service.
 
-1. Launch an EC2 Instance (Ubuntu)
-AMI: Ubuntu Server 22.04 LTS
-Instance Type: t2.micro (Free Tier)
-Security Group Settings:
-Allow SSH (22) – Source 0.0.0.0/0
-Allow FTP (21) – Source 0.0.0.0/0
-Elastic IP (recommended): Allocate and associate to your instance for a fixed public IP
+1. Launch an EC2 Instance (Ubuntu) <br>
+AMI: Ubuntu Server 22.04 LTS <br>
+Instance Type: t2.micro (Free Tier) <br>
+Security Group Settings: <br>
+Allow SSH (22) – Source 0.0.0.0/0 <br>
+Allow FTP (21) – Source 0.0.0.0/0 <br>
+Elastic IP (recommended): Allocate and associate to your instance for a fixed public IP <br>
 
-2. Install vsftpd on the EC2 Instance
-SSH into your EC2 server: ssh -i your-key.pem ubuntu@<public-ip>
-Update packages and install vsftpd: sudo apt update
-Install vsftpd: sudo apt install vsftpd -y
+2. Install vsftpd on the EC2 Instance <br>
+SSH into your EC2 server: ssh -i your-key.pem ubuntu@<public-ip> <br>
+Update packages and install vsftpd: sudo apt update <br>
+Install vsftpd: sudo apt install vsftpd -y <br>
 
-3. Configure vsftpd
-Edit the config file: sudo nano /etc/vsftpd.conf
-Make sure these settings are configured:
-listen=YES
-anonymous_enable=NO
-local_enable=YES
-write_enable=YES
-chroot_local_user=YES
+3. Configure vsftpd <br>
+Edit the config file: sudo nano /etc/vsftpd.conf <br>
+Make sure these settings are configured: <br>
+listen=YES <br>
+anonymous_enable=NO <br>
+local_enable=YES <br>
+write_enable=YES <br>
+chroot_local_user=YES <br>
 
-# Optional custom welcome message
-ftpd_banner=Welcome to My Briding FTP service.
+ #Optional custom welcome message <br>
+ftpd_banner=Welcome to My Briding FTP service. <br>
 
-4. Create a Local FTP User
-sudo adduser ftpuser
-Set a password
+4. Create a Local FTP User <br>
+sudo adduser ftpuser <br>
+Set a password <br>
 
-Give the user a home directory: 
-sudo mkdir /home/ftpuser
-sudo chown ftpuser:ftpuser /home/ftpuser
-Fix permission issue (vsftpd will refuse login if chroot dir is writable):
-sudo chmod a-w /home/ftpuser
+Give the user a home directory: <br>
+sudo mkdir /home/ftpuser <br>
+sudo chown ftpuser:ftpuser /home/ftpuser <br>
+Fix permission issue (vsftpd will refuse login if chroot dir is writable): <br>
+sudo chmod a-w /home/ftpuser <br>
 
-5. Open Required Ports in UFW or AWS
-If using UFW on the instance:
-sudo ufw allow 21/tcp
-sudo ufw reload
-If relying on AWS Security Groups, update your inbound rules to include:
+5. Open Required Ports in UFW or AWS <br>
+If using UFW on the instance: <br>
+sudo ufw allow 21/tcp <br>
+sudo ufw reload <br>
+If relying on AWS Security Groups, update your inbound rules to include: <br>
 
-Type	Protocol	Port Range	Source
-SSH	TCP	22	0.0.0.0/0
-FTP	TCP	21	0.0.0.0/0
+Type	Protocol	Port Range	Source <br>
+SSH	TCP	22	0.0.0.0/0 <br>
+FTP	TCP	21	0.0.0.0/0 <br>
 
-6. Test From Your Kali Linux Machine
-Open a terminal in Kali:ftp <your-ec2-public-ip>
-Example session:
+6. Test From Your Kali Linux Machine <br>
+Open a terminal in Kali:ftp <your-ec2-public-ip> <br>
+Example session: <br>
 ```
 ┌──(kali㉿kali)-[~]
 └─$ ftp 13.213.78.181
