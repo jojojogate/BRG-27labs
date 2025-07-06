@@ -1,8 +1,70 @@
 # BRG-27labs
 
 # Simple FTP Server Setup on Ubuntu (vsftpd)
-
 This setup demonstrates a basic FTP server hosted on a cloud-based Ubuntu instance (e.g., AWS EC2) using the **vsftpd** service.
+
+1. Launch an EC2 Instance (Ubuntu)
+AMI: Ubuntu Server 22.04 LTS
+Instance Type: t2.micro (Free Tier)
+Security Group Settings:
+Allow SSH (22) – Source 0.0.0.0/0
+Allow FTP (21) – Source 0.0.0.0/0
+Elastic IP (recommended): Allocate and associate to your instance for a fixed public IP
+
+2. Install vsftpd on the EC2 Instance
+SSH into your EC2 server: ssh -i your-key.pem ubuntu@<public-ip>
+Update packages and install vsftpd: sudo apt update
+Install vsftpd: sudo apt install vsftpd -y
+
+3. Configure vsftpd
+Edit the config file: sudo nano /etc/vsftpd.conf
+Make sure these settings are configured:
+listen=YES
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+chroot_local_user=YES
+
+# Optional custom welcome message
+ftpd_banner=Welcome to My Briding FTP service.
+
+4. Create a Local FTP User
+sudo adduser ftpuser
+Set a password
+
+Give the user a home directory: 
+sudo mkdir /home/ftpuser
+sudo chown ftpuser:ftpuser /home/ftpuser
+Fix permission issue (vsftpd will refuse login if chroot dir is writable):
+sudo chmod a-w /home/ftpuser
+
+5. Open Required Ports in UFW or AWS
+If using UFW on the instance:
+sudo ufw allow 21/tcp
+sudo ufw reload
+If relying on AWS Security Groups, update your inbound rules to include:
+
+Type	Protocol	Port Range	Source
+SSH	TCP	22	0.0.0.0/0
+FTP	TCP	21	0.0.0.0/0
+
+6. Test From Your Kali Linux Machine
+Open a terminal in Kali:ftp <your-ec2-public-ip>
+Example session:
+┌──(kali㉿kali)-[~]
+└─$ ftp 13.213.78.181
+Connected to 13.213.78.181.
+220 Welcome to My Briding FTP service.
+Name (13.213.78.181:kali): ftpuser
+331 Please specify the password.
+Password: 
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> 
+#If you see this you have accessed your FTP server
+
+Restart the vsftpd service after changes
 
 ---
 
@@ -28,9 +90,43 @@ ftp>
 
 Why This Happens
 FTP operates using two types of connections:
-
 Control connection (port 21) – used to send commands like USER, PASS, etc.
-
 Data connection – used for file transfers and commands like ls, get, put.
-
 In Passive Mode, the server tells the client to connect to a random high-numbered port (like 10750) to receive data. If that port is not open, the connection will hang or timeout when trying to list files or transfer data.
+
+How to Fix Passive Mode
+For you guys out there that actually want to use the FTP service you will need to add afew other configurations
+
+1. Configure vsftpd for Passive Mode
+Edit /etc/vsftpd.conf: nano /etc/vsftpd.conf
+
+pasv_enable=YES
+pasv_min_port=10090
+pasv_max_port=10100
+This restricts the data ports to a known range you can open on your firewall.
+
+Then restart vsftpd: sudo systemctl restart vsftpd
+
+2. Open Passive Ports in the Firewall
+For UFW (Ubuntu): sudo ufw allow 10090:10100/tcp
+For AWS EC2: Go to Security Groups for your instance
+
+Edit Inbound Rules
+Type: Custom TCP
+Port Range: 10090–10100
+Source: Anywhere (0.0.0.0/0) or your IP for tighter security
+
+3. Test Again
+Reconnect from your FTP client and try to list: ls
+This should now succeed without hanging.
+
+Additional Notes
+vsftpd will refuse login if the FTP root directory is writable when chrooted. This is a security feature.
+
+You'll see:
+500 OOPS: vsftpd: refusing to run with writable root inside chroot()
+To fix:
+chmod a-w /home/ftpuser
+FTP sends credentials in plain text. Avoid using it over the public internet unless tunneling through SSH or using FTPS (not covered here).
+
+Consider using SFTP for a more secure alternative (built into SSH).
