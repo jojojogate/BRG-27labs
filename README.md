@@ -50,19 +50,18 @@ FTP	TCP	21	0.0.0.0/0
 
 6. Test From Your Kali Linux Machine
 Open a terminal in Kali:ftp <your-ec2-public-ip>
-Example session:
-
-┌──(kali㉿kali)-[~]
-└─$ ftp 13.213.78.181
-Connected to 13.213.78.181.
-220 Welcome to My Briding FTP service.
-Name (13.213.78.181:kali): ftpuser
-331 Please specify the password.
-Password: 
-230 Login successful.
-Remote system type is UNIX.
-Using binary mode to transfer files.
-ftp> 
+Example session:<br>
+┌──(kali㉿kali)-[~]<br>
+└─$ ftp 13.213.78.181<br>
+Connected to 13.213.78.181.<br>
+220 Welcome to My Briding FTP service.<br>
+Name (13.213.78.181:kali): ftpuser<br>
+331 Please specify the password.<br>
+Password: <br>
+230 Login successful.<br>
+Remote system type is UNIX.<br>
+Using binary mode to transfer files.<br>
+ftp> <br>
 
 #If you see this you have accessed your FTP server
 
