@@ -23,7 +23,8 @@ After login, attempting to run the `ls` command (which lists files on the server
 ftp> ls
 229 Entering Extended Passive Mode (|||10750|)
 ^C
-ftp> 
+ftp>
+```
 
 Why This Happens
 FTP operates using two types of connections:
