@@ -1,6 +1,6 @@
 # BRG-27labs
-4 sessions of docx to show prove of setups
-Video walkthrough demo link here - 
+4 sessions of docx to show prove of setups <br>
+Video walkthrough demo link here -  <br>
 
 # Simple FTP Server Setup on Ubuntu (vsftpd)
 This setup demonstrates a basic FTP server hosted on a cloud-based Ubuntu instance (e.g., AWS EC2) using the **vsftpd** service.
