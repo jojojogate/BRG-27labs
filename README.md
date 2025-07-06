@@ -51,6 +51,7 @@ FTP	TCP	21	0.0.0.0/0
 6. Test From Your Kali Linux Machine
 Open a terminal in Kali:ftp <your-ec2-public-ip>
 Example session:
+
 ┌──(kali㉿kali)-[~]
 └─$ ftp 13.213.78.181
 Connected to 13.213.78.181.
@@ -62,6 +63,7 @@ Password:
 Remote system type is UNIX.
 Using binary mode to transfer files.
 ftp> 
+
 #If you see this you have accessed your FTP server
 
 Restart the vsftpd service after changes
